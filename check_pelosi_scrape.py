@@ -20,8 +20,8 @@ from bs4 import BeautifulSoup
 
 # --- Config ---
 PAGES = [
-    ("Pelosi", "https://www.quiverquant.com/congresstrading/politician/Nancy%20Pelosi-P000197"),
-    ("All Congress Trades", "https://www.quiverquant.com/congresstrading/")
+    ("Pelosi", "https://www.quiverquant.com/congresstrading/politician/Nancy%20Pelosi-P000197")
+    #--("All Congress Trades", "https://www.quiverquant.com/congresstrading/")
 ]
 LAST_SEEN_FILE = "last_seen.json"
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
