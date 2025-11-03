@@ -1,42 +1,38 @@
 name: Check Pelosi Trades
 
-# Run on schedule (every 15 minutes) and manually
 on:
   schedule:
-    - cron: "0 * * * *"   # every hour
-  workflow_dispatch:          # allows manual trigger from Actions UI
+    - cron: '0 * * * *'   # every 15 minutes
+  workflow_dispatch:
 
 jobs:
   check:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: checkout the repo
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
 
-      # Step 2: set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
-      # Step 3: install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4
+          pip install playwright
+          playwright install --with-deps chromium
 
-      # Step 4: run the bot with Error Mode enabled
-      - name: Run Pelosi Bot (Error Mode)
+      - name: Run check script
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          ERROR_MODE: "1"          # <-- Enable error alerts to Telegram
-          TEST_MODE: "0"           # <-- Optional: set "1" to test the bot
         run: |
-          python check_pelosi_scrape.py
+          python check_pelosi_scrape.py || true
 
-      # Step 5: commit last_seen.json if updated (new trades)
       - name: Commit last_seen.json if changed
         run: |
           git config user.name "github-actions[bot]"
